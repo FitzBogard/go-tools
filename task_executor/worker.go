@@ -57,14 +57,16 @@ func (w *Worker) Run(ctx context.Context) {
 
 func process(ctx context.Context, t chan Task, errFunc func(task Task, err error)) {
 	interrupt := make(chan os.Signal, 1)
-	select {
-	case task := <-t:
-		if err := task.Exec(ctx); err != nil {
-			errFunc(task, err)
+	for {
+		select {
+		case task := <-t:
+			if err := task.Exec(ctx); err != nil {
+				errFunc(task, err)
+			}
+		case <-interrupt:
+			time.Sleep(time.Second * 3)
+			return
 		}
-	case <-interrupt:
-		time.Sleep(time.Second * 3)
-		return
 	}
 }
 
