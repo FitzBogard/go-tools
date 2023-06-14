@@ -1,4 +1,4 @@
-package request_dispatcher
+package gin_request_dispatcher
 
 import (
 	"github.com/gin-gonic/gin"
